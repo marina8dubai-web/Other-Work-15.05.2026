@@ -1,214 +1,534 @@
-<!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Work Presentation - Archive List</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
-        .link-item { transition: all 0.2s ease; }
-        .link-item:hover { background-color: #f1f5f9; transform: translateX(4px); }
-        .card { border-radius: 12px; overflow: hidden; height: 100%; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Social Media Activity Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;600&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #ffffff;
+    color: #111111;
+    font-family: 'EB Garamond', Georgia, serif;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  .page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 56px 48px 80px;
+  }
+
+  .doc-header {
+    border-bottom: 2px solid #111;
+    padding-bottom: 20px;
+    margin-bottom: 32px;
+  }
+
+  .doc-header .eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #666;
+    margin-bottom: 8px;
+  }
+
+  .doc-header h1 {
+    font-size: 32px;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+    line-height: 1.1;
+  }
+
+  .doc-header p {
+    color: #555;
+    font-size: 14px;
+    margin-top: 6px;
+  }
+
+  .stats {
+    display: flex;
+    border: 1px solid #ccc;
+    margin-bottom: 36px;
+  }
+
+  .stat {
+    flex: 1;
+    padding: 16px 24px;
+    border-right: 1px solid #ccc;
+  }
+
+  .stat:last-child { border-right: none; }
+
+  .stat .label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #888;
+    margin-bottom: 4px;
+  }
+
+  .stat .value {
+    font-size: 28px;
+    font-weight: 600;
+    font-family: 'IBM Plex Mono', monospace;
+    color: #111;
+  }
+
+  .section { margin-bottom: 40px; }
+
+  .section-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #444;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 6px;
+    margin-bottom: 16px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin-bottom: 8px;
+  }
+
+  thead th {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: #666;
+    padding: 9px 14px;
+    text-align: left;
+    border-top: 1px solid #111;
+    border-bottom: 1px solid #ccc;
+    background: #fafafa;
+  }
+
+  tbody tr { border-bottom: 1px solid #ebebeb; }
+  tbody tr:hover { background: #f7f7f7; }
+  td { padding: 9px 14px; vertical-align: top; }
+
+  .ref {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    color: #111;
+    background: #ebebeb;
+    padding: 2px 7px;
+    display: inline-block;
+    white-space: nowrap;
+  }
+
+  .activity-type { font-size: 13.5px; color: #222; }
+
+  .links-cell {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+  }
+
+  .links-cell a {
+    color: #222;
+    text-decoration: underline;
+    text-decoration-color: #bbb;
+    text-underline-offset: 2px;
+    word-break: break-all;
+  }
+
+  .links-cell a:hover { text-decoration-color: #111; }
+
+  .user-block {
+    border: 1px solid #e0e0e0;
+    margin-bottom: 14px;
+  }
+
+  .user-block-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 16px;
+    border-bottom: 1px solid #e0e0e0;
+    background: #fafafa;
+    flex-wrap: wrap;
+  }
+
+  .user-ref {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    color: #111;
+    background: #e0e0e0;
+    padding: 2px 8px;
+    white-space: nowrap;
+  }
+
+  .user-name {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    color: #111;
+  }
+
+  .user-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: #999;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .user-block-body { padding: 12px 16px; }
+
+  .link-row {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    padding: 5px 0;
+    border-bottom: 1px solid #f2f2f2;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .link-row:last-of-type { border-bottom: none; }
+
+  .link-row .num {
+    color: #bbb;
+    min-width: 18px;
+    font-size: 10px;
+    flex-shrink: 0;
+  }
+
+  .link-row a {
+    color: #222;
+    text-decoration: underline;
+    text-decoration-color: #bbb;
+    text-underline-offset: 2px;
+    word-break: break-all;
+  }
+
+  .link-row a:hover { text-decoration-color: #111; }
+
+  .link-row .flag {
+    font-size: 10px;
+    font-family: 'IBM Plex Mono', monospace;
+    color: #fff;
+    background: #666;
+    padding: 1px 7px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .note-block {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px 12px;
+    border-left: 3px solid #ccc;
+    background: #fafafa;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: #555;
+    margin-top: 10px;
+    line-height: 1.65;
+  }
+
+  .note-tag {
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 1px 6px;
+    border: 1px solid #bbb;
+    color: #777;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .status-deactivated {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    color: #111;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border: 1px solid #111;
+    padding: 1px 7px;
+  }
+
+  .table-footer {
+    border-top: 2px solid #111;
+    padding-top: 10px;
+    margin-top: 36px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: #aaa;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  @media print {
+    body { font-size: 11px; }
+    .page { padding: 20px; }
+  }
+</style>
 </head>
-<body class="text-slate-900 p-4 md:p-8">
+<body>
+<div class="page">
 
-    <div class="max-w-6xl mx-auto">
-        <header class="mb-10 border-b border-slate-200 pb-6">
-            <h1 class="text-3xl font-extrabold text-slate-800">Other Work: Presentation List</h1>
-            <p class="text-slate-500 mt-2">A comprehensive, clickable archive of social media interactions and references.</p>
-        </header>
+  <div class="doc-header">
+    <div class="eyebrow">Categorised Activity Log</div>
+    <h1>Social Media Activity Dashboard</h1>
+    <p>Structured overview of retweets, replies, and user interactions · X / Twitter</p>
+  </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+  <div class="stats">
+    <div class="stat">
+      <div class="label">Sections</div>
+      <div class="value">5</div>
+    </div>
+    <div class="stat">
+      <div class="label">User Profiles</div>
+      <div class="value">8</div>
+    </div>
+    <div class="stat">
+      <div class="label">Voluntarily Deactivated</div>
+      <div class="value">1</div>
+    </div>
+  </div>
 
-            <!-- P31 - Pamir Daily News re-tweets -->
-            <div class="card bg-white border border-slate-200 shadow-sm flex flex-col">
-                <div class="bg-blue-600 px-4 py-3 text-white">
-                    <span class="text-xs font-bold uppercase tracking-wider opacity-80">P31</span>
-                    <h2 class="font-bold">Pamir Daily News re-tweets</h2>
-                </div>
-                <div class="p-4 space-y-2 flex-grow">
-                    <a href="https://x.com/Marina23376051/status/1581349034434138115" target="_blank" class="link-item block p-3 rounded-lg border border-slate-100 text-blue-600 text-sm font-medium truncate">status/1581349034434138115</a>
-                    <a href="https://x.com/Marina23376051/status/1581521485185024000" target="_blank" class="link-item block p-3 rounded-lg border border-slate-100 text-blue-600 text-sm font-medium truncate">status/1581521485185024000</a>
-                    <a href="https://x.com/Marina23376051/status/1581531108931313664" target="_blank" class="link-item block p-3 rounded-lg border border-slate-100 text-blue-600 text-sm font-medium truncate">status/1581531108931313664</a>
-                    <a href="https://x.com/Marina23376051/status/1582269474454937600" target="_blank" class="link-item block p-3 rounded-lg border border-slate-100 text-blue-600 text-sm font-medium truncate">status/1582269474454937600</a>
-                    <a href="https://x.com/Marina23376051/status/1582478093142306816" target="_blank" class="link-item block p-3 rounded-lg border border-slate-100 text-blue-600 text-sm font-medium truncate">status/1582478093142306816</a>
-                </div>
-            </div>
+  <!-- Section 1 -->
+  <div class="section">
+    <div class="section-title">1 &nbsp;·&nbsp; Pamir Daily News Activity</div>
 
-            <!-- P57 - Pamir Daily News tweets -->
-            <div class="card bg-white border border-slate-200 shadow-sm flex flex-col">
-                <div class="bg-sky-500 px-4 py-3 text-white">
-                    <span class="text-xs font-bold uppercase tracking-wider opacity-80">P57</span>
-                    <h2 class="font-bold">Pamir Daily News tweets</h2>
-                </div>
-                <div class="p-4 space-y-2 flex-grow">
-                    <a href="https://x.com/Marina23376051/status/1587145526587408385" target="_blank" class="link-item block p-3 rounded-lg border border-slate-100 text-blue-600 text-sm font-medium truncate">status/1587145526587408385</a>
-                    <a href="https://x.com/Marina23376051/status/1590782352350793728" target="_blank" class="link-item block p-3 rounded-lg border border-slate-100 text-blue-600 text-sm font-medium truncate">status/1590782352350793728</a>
-                    <a href="https://x.com/Marina23376051/status/1590991457229623296" target="_blank" class="link-item block p-3 rounded-lg border border-slate-100 text-blue-600 text-sm font-medium truncate">status/1590991457229623296</a>
-                    <a href="https://x.com/Marina23376051/status/1596043037699760128" target="_blank" class="link-item block p-3 rounded-lg border border-slate-100 text-blue-600 text-sm font-medium truncate">status/1596043037699760128</a>
-                </div>
-            </div>
-
-            <!-- P67 - PAMIR DAILY NEWS -->
-            <div class="card bg-white border border-slate-200 shadow-sm flex flex-col">
-                <div class="bg-indigo-600 px-4 py-3 text-white">
-                    <span class="text-xs font-bold uppercase tracking-wider opacity-80">P67</span>
-                    <h2 class="font-bold uppercase tracking-tight">PAMIR DAILY NEWS</h2>
-                </div>
-                <div class="p-4 space-y-2 flex-grow">
-                    <a href="https://x.com/Marina23376051/status/1705137506281296182" target="_blank" class="link-item block p-3 rounded-lg border border-slate-100 text-blue-600 text-sm font-medium truncate">status/1705137506281296182</a>
-                    <a href="https://x.com/Marina23376051/status/1706369036408254938" target="_blank" class="link-item block p-3 rounded-lg border border-slate-100 text-blue-600 text-sm font-medium truncate">status/1706369036408254938</a>
-                </div>
-            </div>
-
-            <!-- P99 - HUMAYRBAKHT RETWEETS -->
-            <div class="card bg-white border border-slate-200 shadow-sm flex flex-col">
-                <div class="bg-slate-800 px-4 py-3 text-white">
-                    <span class="text-xs font-bold uppercase tracking-wider opacity-80">P99</span>
-                    <h2 class="font-bold uppercase">HUMAYRBAKHT RETWEETS</h2>
-                </div>
-                <div class="p-4 space-y-2 flex-grow">
-                    <a href="https://x.com/Marina23376051/status/1561392188419883008" target="_blank" class="link-item block p-3 rounded-lg border border-slate-100 text-blue-600 text-sm font-medium truncate">status/1561392188419883008</a>
-                    <a href="https://x.com/Marina23376051/status/1552779780923293696" target="_blank" class="link-item block p-3 rounded-lg border border-slate-100 text-blue-600 text-sm font-medium truncate">status/1552779780923293696</a>
-                    <a href="https://x.com/Marina23376051/status/1463961541930369025" target="_blank" class="link-item block p-3 rounded-lg border border-slate-100 text-blue-600 text-sm font-medium truncate">status/1463961541930369025</a>
-                </div>
-            </div>
-
-            <!-- P101 - ACCARUSSIAN -->
-            <div class="card bg-white border border-slate-200 shadow-sm flex flex-col">
-                <div class="bg-red-700 px-4 py-3 text-white">
-                    <span class="text-xs font-bold uppercase tracking-wider opacity-80">P101</span>
-                    <h2 class="font-bold uppercase">ACCARUSSIAN</h2>
-                </div>
-                <div class="p-4 flex-grow">
-                    <a href="https://x.com/Marina23376051/status/1463961541930369025" target="_blank" class="link-item block p-3 rounded-lg border border-slate-100 text-blue-600 text-sm font-medium truncate">status/1463961541930369025</a>
-                </div>
-            </div>
-
-            <!-- P103/P107 - TEMUR VARKY -->
-            <div class="card bg-white border border-slate-200 shadow-sm flex flex-col">
-                <div class="bg-orange-600 px-4 py-3 text-white">
-                    <h2 class="font-bold uppercase tracking-tight">TEMUR VARKY</h2>
-                </div>
-                <div class="p-4 space-y-4 flex-grow">
-                    <div>
-                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2 underline">P103 /retweets/</span>
-                        <div class="space-y-1">
-                            <a href="https://x.com/Marina23376051/status/1463961541930369025" target="_blank" class="link-item block p-2 rounded text-blue-600 text-xs truncate">status/1463961541930369025</a>
-                            <a href="https://x.com/Marina23376051/status/1490275758417264641" target="_blank" class="link-item block p-2 rounded text-blue-600 text-xs truncate">status/1490275758417264641</a>
-                            <a href="https://x.com/Marina23376051/status/1490298382702850056" target="_blank" class="link-item block p-2 rounded text-blue-600 text-xs truncate">status/1490298382702850056</a>
-                            <a href="https://x.com/Marina23376051/status/1490342323355635713" target="_blank" class="link-item block p-2 rounded text-blue-600 text-xs truncate">status/1490342323355635713</a>
-                            <a href="https://x.com/Marina23376051/status/1528709925588942851" target="_blank" class="link-item block p-2 rounded text-blue-600 text-xs truncate">status/1528709925588942851</a>
-                        </div>
-                    </div>
-                    <div class="pt-3 border-t border-slate-100">
-                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2 underline">P107 /reply/</span>
-                        <div class="space-y-1">
-                            <a href="https://x.com/Marina23376051/status/1584529182511407105" target="_blank" class="link-item block p-2 rounded text-blue-600 text-xs truncate">status/1584529182511407105</a>
-                            <a href="https://x.com/Marina23376051/status/1590799368453775360" target="_blank" class="link-item block p-2 rounded text-blue-600 text-xs truncate">status/1590799368453775360</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- P111/P113 - Subhiya2 -->
-            <div class="card bg-white border border-slate-200 shadow-sm flex flex-col">
-                <div class="bg-purple-700 px-4 py-3 text-white">
-                    <h2 class="font-bold uppercase tracking-tight">Subhiya2 REPLYS & RETWEETS</h2>
-                </div>
-                <div class="p-4 space-y-4 flex-grow">
-                    <div>
-                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2 underline">P111 replies</span>
-                        <div class="space-y-1">
-                            <a href="https://x.com/Marina23376051/status/1554089128416919554" target="_blank" class="link-item block p-2 rounded text-blue-600 text-xs truncate">status/1554089128416919554</a>
-                            <a href="https://x.com/Marina23376051/status/1564355565903568897" target="_blank" class="link-item block p-2 rounded text-blue-600 text-xs truncate">status/1564355565903568897</a>
-                            <a href="https://x.com/Marina23376051/status/1575458326871261185" target="_blank" class="link-item block p-2 rounded text-blue-600 text-xs truncate">status/1575458326871261185</a>
-                            <a href="https://x.com/Marina23376051/status/1590031504755036160" target="_blank" class="link-item block p-2 rounded text-blue-600 text-xs truncate">status/1590031504755036160</a>
-                        </div>
-                    </div>
-                    <div class="pt-3 border-t border-slate-100">
-                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-2 underline">P113 Subhiya2 RETWEETS</span>
-                        <div class="bg-amber-50 p-2 rounded border border-amber-200 text-[10px] text-amber-800 mb-2 italic">
-                            The ferst link inaccessible (group retweet). User @susile deactivated account 19.02.2022.
-                        </div>
-                        <div class="space-y-1">
-                            <a href="https://x.com/Marina23376051/status/1526507695053934593" target="_blank" class="link-item block p-2 rounded text-blue-600 text-xs truncate">status/1526507695053934593</a>
-                            <a href="https://x.com/Marina23376051/status/1526530049955987457" target="_blank" class="link-item block p-2 rounded text-blue-600 text-xs truncate">status/1526530049955987457</a>
-                            <a href="https://x.com/Marina23376051/status/1526575383881162753" target="_blank" class="link-item block p-2 rounded text-blue-600 text-xs truncate">status/1526575383881162753</a>
-                            <a href="https://x.com/Marina23376051/status/1526575425723551746" target="_blank" class="link-item block p-2 rounded text-blue-600 text-xs truncate">status/1526575425723551746</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- P85 - My REPLY TO @Mahdi34860988 -->
-            <div class="card bg-white border border-slate-200 shadow-sm flex flex-col">
-                <div class="bg-emerald-600 px-4 py-3 text-white">
-                    <span class="text-xs font-bold uppercase tracking-wider opacity-80">P85</span>
-                    <h2 class="font-bold">My REPLY TO @Mahdi34860988</h2>
-                </div>
-                <div class="p-4 space-y-2 flex-grow">
-                    <a href="https://x.com/Marina23376051/status/1634255292115329036" target="_blank" class="link-item block p-3 rounded-lg border border-slate-100 text-blue-600 text-sm font-medium truncate">status/1634255292115329036</a>
-                    <a href="https://x.com/Marina23376051/status/1618895656093093889" target="_blank" class="link-item block p-3 rounded-lg border border-slate-100 text-blue-600 text-sm font-medium truncate">status/1618895656093093889</a>
-                    <a href="https://x.com/Marina23376051/status/1608235723219689472" target="_blank" class="link-item block p-3 rounded-lg border border-slate-100 text-blue-600 text-sm font-medium truncate">status/1608235723219689472</a>
-                    <a href="https://x.com/Marina23376051/status/1608233536271822848" target="_blank" class="link-item block p-3 rounded-lg border border-slate-100 text-blue-600 text-sm font-medium truncate">status/1608233536271822848</a>
-                    <a href="https://x.com/Marina23376051/status/1608231869077651459" target="_blank" class="link-item block p-3 rounded-lg border border-slate-100 text-blue-600 text-sm font-medium truncate">status/1608231869077651459</a>
-                </div>
-            </div>
-
-            <!-- QUESTIONS Section -->
-            <div class="card bg-slate-900 px-4 py-6 text-white shadow-lg lg:col-span-1">
-                <h2 class="text-xl font-bold mb-6 tracking-tight uppercase border-b border-slate-700 pb-2">QUESTIONS:</h2>
-                <div class="space-y-4">
-                    <div class="flex justify-between items-center bg-slate-800 p-3 rounded-lg">
-                        <span class="text-xs font-bold text-slate-400">P16</span>
-                        <a href="https://x.com/Marina23376051/status/1596043037699760128" target="_blank" class="text-blue-400 text-sm font-medium hover:underline">Link openable</a>
-                    </div>
-                    <div class="flex justify-between items-center bg-slate-800 p-3 rounded-lg">
-                        <span class="text-xs font-bold text-slate-400">P19</span>
-                        <a href="https://x.com/Marina23376051/status/1614204261662859266" target="_blank" class="text-blue-400 text-sm font-medium hover:underline">Link openable</a>
-                    </div>
-                    <div class="flex justify-between items-center bg-slate-800 p-3 rounded-lg">
-                        <span class="text-xs font-bold text-slate-400">P137 Profile</span>
-                        <a href="https://x.com/TemurVarky" target="_blank" class="text-blue-400 text-sm font-medium hover:underline">@TemurVarky</a>
-                    </div>
-                    <div class="flex justify-between items-center bg-slate-800 p-3 rounded-lg">
-                        <span class="text-xs font-bold text-slate-400">P139 Profile</span>
-                        <a href="https://x.com/Subhiya2" target="_blank" class="text-blue-400 text-sm font-medium hover:underline">@Subhiya2</a>
-                    </div>
-                    <div class="flex justify-between items-center bg-slate-800 p-3 rounded-lg">
-                        <span class="text-xs font-bold text-slate-400">P143 Profile</span>
-                        <a href="https://x.com/pmt_tajikistan" target="_blank" class="text-blue-400 text-sm font-medium hover:underline">@pmt_tajikistan</a>
-                    </div>
-                    <p class="text-[10px] text-slate-500 italic pt-2">/direct messages are available on my account/</p>
-                </div>
-            </div>
-
-        </div>
-
-        <!-- BOTTOM DISCREPANCY NOTE -->
-        <div class="mt-8 bg-red-50 border border-red-200 p-6 rounded-2xl shadow-sm">
-            <h3 class="text-red-800 font-bold mb-3 flex items-center gap-2 uppercase tracking-wide">
-                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
-                P85 - @Mahdi34860988 Discrepancy Note
-            </h3>
-            <div class="text-red-700 text-sm space-y-3 leading-relaxed">
-                <p>The posts on page 85 are accessible. However:</p>
-                <ul class="list-disc ml-5 space-y-1">
-                    <li>The X archive shows I have replied to Mahdi.</li>
-                    <li>The X platform doesn’t show the name the message is addressed to.</li>
-                    <li>It is not available / seems most of the links from both sides, X and archive .com, have been cleared.</li>
-                </ul>
-            </div>
-        </div>
-
-        <footer class="mt-12 text-center text-slate-400 text-xs pb-10">
-            &copy; 2024 Comprehensive Presentation Dashboard
-        </footer>
+    <div class="user-block">
+      <div class="user-block-header">
+        <span class="user-ref">P31</span>
+        <span class="user-name">PAMIR DAILY NEWS</span>
+        <span class="user-label">Retweets</span>
+      </div>
+      <div class="user-block-body">
+        <div class="link-row"><span class="num">1</span><a href="https://x.com/Marina23376051/status/1581349034434138115" target="_blank" rel="noopener">https://x.com/Marina23376051/status/1581349034434138115</a></div>
+        <div class="link-row"><span class="num">2</span><a href="https://x.com/Marina23376051/status/1581521485185024000" target="_blank" rel="noopener">https://x.com/Marina23376051/status/1581521485185024000</a></div>
+        <div class="link-row"><span class="num">3</span><a href="https://x.com/Marina23376051/status/1581531108931313664" target="_blank" rel="noopener">https://x.com/Marina23376051/status/1581531108931313664</a></div>
+        <div class="link-row"><span class="num">4</span><a href="https://x.com/Marina23376051/status/1582269474454937600" target="_blank" rel="noopener">https://x.com/Marina23376051/status/1582269474454937600</a></div>
+        <div class="link-row"><span class="num">5</span><a href="https://x.com/Marina23376051/status/1582478093142306816" target="_blank" rel="noopener">https://x.com/Marina23376051/status/1582478093142306816</a></div>
+      </div>
     </div>
 
+    <div class="user-block">
+      <div class="user-block-header">
+        <span class="user-ref">P57</span>
+        <span class="user-name">PAMIR DAILY NEWS</span>
+        <span class="user-label">Tweets</span>
+      </div>
+      <div class="user-block-body">
+        <div class="link-row"><span class="num">1</span><a href="https://x.com/Marina23376051/status/1587145526587408385" target="_blank" rel="noopener">https://x.com/Marina23376051/status/1587145526587408385</a></div>
+        <div class="link-row"><span class="num">2</span><a href="https://x.com/Marina23376051/status/1590782352350793728" target="_blank" rel="noopener">https://x.com/Marina23376051/status/1590782352350793728</a></div>
+        <div class="link-row"><span class="num">3</span><a href="https://x.com/Marina23376051/status/1590991457229623296" target="_blank" rel="noopener">https://x.com/Marina23376051/status/1590991457229623296</a></div>
+        <div class="link-row"><span class="num">4</span><a href="https://x.com/Marina23376051/status/1590991457229623296" target="_blank" rel="noopener">https://x.com/Marina23376051/status/1590991457229623296</a></div>
+        <div class="link-row"><span class="num">5</span><a href="https://x.com/Marina23376051/status/1596043037699760128" target="_blank" rel="noopener">https://x.com/Marina23376051/status/1596043037699760128</a></div>
+        <div class="link-row"><span class="num">6</span><a href="https://x.com/Marina23376051/status/1596043037699760128" target="_blank" rel="noopener">https://x.com/Marina23376051/status/1596043037699760128</a></div>
+      </div>
+    </div>
+
+    <div class="user-block">
+      <div class="user-block-header">
+        <span class="user-ref">P67</span>
+        <span class="user-name">PAMIR DAILY NEWS</span>
+        <span class="user-label">General</span>
+      </div>
+      <div class="user-block-body">
+        <div class="link-row"><span class="num">1</span><a href="https://x.com/Marina23376051/status/1705137506281296182" target="_blank" rel="noopener">https://x.com/Marina23376051/status/1705137506281296182</a></div>
+        <div class="link-row"><span class="num">2</span><a href="https://x.com/Marina23376051/status/1706369036408254938" target="_blank" rel="noopener">https://x.com/Marina23376051/status/1706369036408254938</a></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 2 -->
+  <div class="section">
+    <div class="section-title">2 &nbsp;·&nbsp; User-Specific Retweets &amp; Content</div>
+
+    <div class="user-block">
+      <div class="user-block-header">
+        <span class="user-ref">P99</span>
+        <span class="user-name">HUMAYRBAKHT</span>
+        <span class="user-label">Retweets</span>
+      </div>
+      <div class="user-block-body">
+        <div class="link-row"><span class="num">1</span><a href="https://x.com/Marina23376051/status/1561392188419883008" target="_blank" rel="noopener">https://x.com/Marina23376051/status/1561392188419883008</a></div>
+        <div class="link-row"><span class="num">2</span><a href="https://x.com/Marina23376051/status/1552779780923293696" target="_blank" rel="noopener">https://x.com/Marina23376051/status/1552779780923293696</a></div>
+        <div class="link-row"><span class="num">3</span><a href="https://x.com/Marina23376051/status/1463961541930369025" target="_blank" rel="noopener">https://x.com/Marina23376051/status/1463961541930369025</a></div>
+      </div>
+    </div>
+
+    <div class="user-block">
+      <div class="user-block-header">
+        <span class="user-ref">P101</span>
+        <span class="user-name">ACCARUSSIAN</span>
+        <span class="user-label">Content</span>
+      </div>
+      <div class="user-block-body">
+        <div class="link-row"><span class="num">1</span><a href="https://x.com/Marina23376051/status/1463961541930369025" target="_blank" rel="noopener">https://x.com/Marina23376051/status/1463961541930369025</a></div>
+      </div>
+    </div>
+
+    <div class="user-block">
+      <div class="user-block-header">
+        <span class="user-ref">P103</span>
+        <span class="user-name">TEMUR VARKY</span>
+        <span class="user-label">Retweets</span>
+      </div>
+      <div class="user-block-body">
+        <div class="link-row"><span class="num">1</span><a href="https://x.com/Marina23376051/status/1463961541930369025" target="_blank" rel="noopener">https://x.com/Marina23376051/status/1463961541930369025</a></div>
+        <div class="link-row"><span class="num">2</span><a href="https://x.com/Marina23376051/status/1490275758417264641" target="_blank" rel="noopener">https://x.com/Marina23376051/status/1490275758417264641</a></div>
+        <div class="link-row"><span class="num">3</span><a href="https://x.com/Marina23376051/status/1490298382702850056" target="_blank" rel="noopener">https://x.com/Marina23376051/status/1490298382702850056</a></div>
+        <div class="link-row"><span class="num">4</span><a href="https://x.com/Marina23376051/status/1490342323355635713" target="_blank" rel="noopener">https://x.com/Marina23376051/status/1490342323355635713</a></div>
+        <div class="link-row"><span class="num">5</span><a href="https://x.com/Marina23376051/status/1528709925588942851" target="_blank" rel="noopener">https://x.com/Marina23376051/status/1528709925588942851</a></div>
+      </div>
+    </div>
+
+    <div class="user-block">
+      <div class="user-block-header">
+        <span class="user-ref">P107</span>
+        <span class="user-name">TEMUR VARKY</span>
+        <span class="user-label">Replies</span>
+      </div>
+      <div class="user-block-body">
+        <div class="link-row"><span class="num">1</span><a href="https://x.com/Marina23376051/status/1584529182511407105" target="_blank" rel="noopener">https://x.com/Marina23376051/status/1584529182511407105</a></div>
+        <div class="link-row"><span class="num">2</span><a href="https://x.com/Marina23376051/status/1590799368453775360" target="_blank" rel="noopener">https://x.com/Marina23376051/status/1590799368453775360</a></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 3 -->
+  <div class="section">
+    <div class="section-title">3 &nbsp;·&nbsp; Subhiya2 Interactions</div>
+
+    <div class="user-block">
+      <div class="user-block-header">
+        <span class="user-ref">P111</span>
+        <span class="user-name">Subhiya2</span>
+        <span class="user-label">Replies</span>
+      </div>
+      <div class="user-block-body">
+        <div class="link-row"><span class="num">1</span><a href="https://x.com/Marina23376051/status/1554089128416919554" target="_blank" rel="noopener">https://x.com/Marina23376051/status/1554089128416919554</a></div>
+        <div class="link-row"><span class="num">2</span><a href="https://x.com/Marina23376051/status/1564355565903568897" target="_blank" rel="noopener">https://x.com/Marina23376051/status/1564355565903568897</a></div>
+        <div class="link-row"><span class="num">3</span><a href="https://x.com/Marina23376051/status/1575458326871261185" target="_blank" rel="noopener">https://x.com/Marina23376051/status/1575458326871261185</a></div>
+        <div class="link-row"><span class="num">4</span><a href="https://x.com/Marina23376051/status/1590031504755036160" target="_blank" rel="noopener">https://x.com/Marina23376051/status/1590031504755036160</a></div>
+      </div>
+    </div>
+
+    <div class="user-block">
+      <div class="user-block-header">
+        <span class="user-ref">P113</span>
+        <span class="user-name">Subhiya2</span>
+        <span class="user-label">Retweets</span>
+      </div>
+      <div class="user-block-body">
+        <div class="link-row">
+          <span class="num">1</span>
+          <a href="https://x.com/Marina23376051/status/1526507695053934593" target="_blank" rel="noopener">https://x.com/Marina23376051/status/1526507695053934593</a>
+          <span class="flag">Inaccessible — Group Retweet</span>
+        </div>
+        <div class="link-row"><span class="num">2</span><a href="https://x.com/Marina23376051/status/1526530049955987457" target="_blank" rel="noopener">https://x.com/Marina23376051/status/1526530049955987457</a></div>
+        <div class="link-row"><span class="num">3</span><a href="https://x.com/Marina23376051/status/1526575383881162753" target="_blank" rel="noopener">https://x.com/Marina23376051/status/1526575383881162753</a></div>
+        <div class="link-row"><span class="num">4</span><a href="https://x.com/Marina23376051/status/1526575425723551746" target="_blank" rel="noopener">https://x.com/Marina23376051/status/1526575425723551746</a></div>
+        <div class="note-block">
+          <span class="note-tag">Status</span>
+          <span>@susile &nbsp;&nbsp; <span class="status-deactivated">Voluntarily Deactivated</span> &nbsp;&nbsp; 19.02.2022</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 4 -->
+  <div class="section">
+    <div class="section-title">4 &nbsp;·&nbsp; My Replies to @Mahdi34860988</div>
+
+    <div class="user-block">
+      <div class="user-block-header">
+        <span class="user-ref">P85</span>
+        <span class="user-name">@Mahdi34860988</span>
+        <span class="user-label">My Replies</span>
+      </div>
+      <div class="user-block-body">
+        <div class="link-row"><span class="num">1</span><a href="https://x.com/Marina23376051/status/1634255292115329036" target="_blank" rel="noopener">https://x.com/Marina23376051/status/1634255292115329036</a></div>
+        <div class="link-row"><span class="num">2</span><a href="https://x.com/Marina23376051/status/1618895656093093889" target="_blank" rel="noopener">https://x.com/Marina23376051/status/1618895656093093889</a></div>
+        <div class="link-row"><span class="num">3</span><a href="https://x.com/Marina23376051/status/1608235723219689472" target="_blank" rel="noopener">https://x.com/Marina23376051/status/1608235723219689472</a></div>
+        <div class="link-row"><span class="num">4</span><a href="https://x.com/Marina23376051/status/1608233536271822848" target="_blank" rel="noopener">https://x.com/Marina23376051/status/1608233536271822848</a></div>
+        <div class="link-row"><span class="num">5</span><a href="https://x.com/Marina23376051/status/1608231869077651459" target="_blank" rel="noopener">https://x.com/Marina23376051/status/1608231869077651459</a></div>
+        <div class="note-block" style="margin-top:10px;">
+          <span class="note-tag">Technical Note</span>
+          <span>Posts on P85 are accessible. The X archive confirms replies were sent to @Mahdi34860988, however the X platform does not currently display the recipient name for these replies. Most links from both X and archive.com appear to have been cleared.</span>
+        </div>
+        <div class="note-block" style="margin-top:6px;">
+          <span class="note-tag">Verification</span>
+          <span>Direct messages remain available on the account for verification of these interactions.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 5 -->
+  <div class="section">
+    <div class="section-title">5 &nbsp;·&nbsp; Research &amp; Questions</div>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:80px">Ref.</th>
+          <th style="width:400px">Link / Profile</th>
+          <th>Category</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="ref">P16</span></td>
+          <td class="links-cell"><a href="https://x.com/Marina23376051/status/1596043037699760128" target="_blank" rel="noopener">https://x.com/Marina23376051/status/1596043037699760128</a></td>
+          <td class="activity-type">Question Data</td>
+        </tr>
+        <tr>
+          <td><span class="ref">P19</span></td>
+          <td class="links-cell"><a href="https://x.com/Marina23376051/status/1614204261662859266" target="_blank" rel="noopener">https://x.com/Marina23376051/status/1614204261662859266</a></td>
+          <td class="activity-type">Question Data</td>
+        </tr>
+        <tr>
+          <td><span class="ref">P137</span></td>
+          <td class="links-cell"><a href="https://x.com/TemurVarky" target="_blank" rel="noopener">https://x.com/TemurVarky</a></td>
+          <td class="activity-type">Profile Check</td>
+        </tr>
+        <tr>
+          <td><span class="ref">P139</span></td>
+          <td class="links-cell"><a href="https://x.com/Subhiya2" target="_blank" rel="noopener">https://x.com/Subhiya2</a></td>
+          <td class="activity-type">Profile Check</td>
+        </tr>
+        <tr>
+          <td><span class="ref">P143</span></td>
+          <td class="links-cell"><a href="https://x.com/pmt_tajikistan" target="_blank" rel="noopener">https://x.com/pmt_tajikistan</a></td>
+          <td class="activity-type">Profile Check</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="note-block" style="margin-top:12px;">
+      <span class="note-tag">Note</span>
+      <span>Direct messages remain available on the account for verification of these interactions.</span>
+    </div>
+  </div>
+
+  <div class="table-footer">
+    <span>Social Media Activity Dashboard</span>
+    <span>5 sections · 8 user profiles · verified links</span>
+  </div>
+
+</div>
 </body>
 </html>
